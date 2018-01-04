@@ -17,6 +17,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -28,7 +31,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import org.json.simple.JSONObject;
+import org.apache.sling.commons.json.JSONException;
+import org.apache.sling.commons.json.JSONObject;
 
 public class SelectCardsFrame extends JPanel {
     
@@ -37,32 +41,40 @@ public class SelectCardsFrame extends JPanel {
     private JButton addButton;
     private int cardsCount = 0;
     private int commonsCount = 0;
+    String left_bar_titles[] = new String[8];
     static MouseAdapter ma;
     Map m = new LinkedHashMap(5);
-    /*
-    private void saveData() {
-        JSONObject jo = new JSONObject();
-        Map m;
-        for(int i=0; i<8; i++) {
-            m = new LinkedHashMap(5);
-            for(int j=1; j<6; j++){
-                m.put(top_bar_titles[j], labels[i][j].getText());
-            }   
-            jo.put(left_bar_titles[i], m);
+  
+    private void saveData() throws JSONException, IOException {
+        Singleton singleton = Singleton.getInstance();
+        
+        String text = new String(Files.readAllBytes(Paths.get(singleton.getFileName())), StandardCharsets.UTF_8);
+        JSONObject jo = new JSONObject(text); 
+        JSONObject loaded = jo.getJSONObject(singleton.getPack());
+
+        for(int i=0; i<left_bar_titles.length; i++) {
+            if(m.containsKey(left_bar_titles[i])) {
+                int value = Integer.parseInt(loaded.get(left_bar_titles[i]).toString())+
+                        Integer.parseInt(m.get(left_bar_titles[i]).toString());
+                loaded.remove(left_bar_titles[i]);
+                loaded.put(left_bar_titles[i], ""+value);
+            }      
         }
-                
+        jo.remove(singleton.getPack());
+        jo.put(singleton.getPack(), loaded);
+        
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter("JSONExample.json");
+            pw = new PrintWriter(singleton.getFileName());
         } catch (FileNotFoundException ex) {
             Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-                
-        pw.write(jo.toJSONString());
+        
+        pw.write(jo.toString(4));
          
         pw.flush();
         pw.close();        
-    }*/
+    }
     
     public final JButton makeButton(String card, String button, String rollover, String pressed, int h, int w) throws IOException {
         BufferedImage startButton = ImageIO.read(getClass().getResource("/"+button));
@@ -94,6 +106,7 @@ public class SelectCardsFrame extends JPanel {
                         if((card.equals("common") || card.equals("gcommon"))) 
                             commonsCount--;
                         cardsCount--;
+                        m.remove(card, label.getText());
                         addButton.setEnabled(false);
                     }
                 } else {
@@ -110,6 +123,7 @@ public class SelectCardsFrame extends JPanel {
                             int count = Integer.parseInt(label.getText())+1;
                             label.setText(""+count);
                             cardsCount++;
+                            m.put(card, label.getText());
                         }
                         if(cardsCount == 5) {
                             addButton.setEnabled(true);
@@ -126,6 +140,16 @@ public class SelectCardsFrame extends JPanel {
     public SelectCardsFrame(JPanel panel) {
         contentPane = panel;
         Jezyk jezyk = new Polski();
+        
+        left_bar_titles[0] = "common";
+        left_bar_titles[1] = "gcommon";
+        left_bar_titles[2] = "rare";
+        left_bar_titles[3] = "grare";
+        left_bar_titles[4] = "epic";
+        left_bar_titles[5] = "gepic";
+        left_bar_titles[6] = "legend";
+        left_bar_titles[7] = "glegend";
+        
         try {
             font = Font.createFont(Font.TRUETYPE_FONT, new File("BlizQuadrata.ttf"));
         } catch (FontFormatException ex) {
@@ -172,6 +196,21 @@ public class SelectCardsFrame extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 CardLayout cardLayout = (CardLayout) contentPane.getLayout();
                 cardLayout.show(contentPane, "SelectPackFrame");
+            }
+        });
+        
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    saveData();
+                } catch (JSONException ex) {
+                    Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                CardLayout cardLayout = (CardLayout) contentPane.getLayout();
+                cardLayout.show(contentPane, "MainFrame");
             }
         });
         
