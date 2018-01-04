@@ -10,6 +10,7 @@ public class Polski implements Jezyk {
         // MENU //
         mapa.put("open", "Otwórz");
         mapa.put("view", "Podgląd");
+        mapa.put("back", "Powrót");
         // MENU//
         
         // RZADKOŚĆ //

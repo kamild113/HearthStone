@@ -12,12 +12,15 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import org.apache.sling.commons.json.JSONException;
  
 public class MainFrame extends JPanel { 
     
@@ -79,12 +82,19 @@ public class MainFrame extends JPanel {
         viewPacks.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                /*
-                JFrame frame = new JFrame ("MyPanel");
-                frame.getContentPane().add (new MyFrame());
-                frame.pack();
-                frame.setVisible (true);
-                */
+                try {
+                    /*
+                    JFrame frame = new JFrame ("MyPanel");
+                    frame.getContentPane().add (new MyFrame());
+                    frame.pack();
+                    frame.setVisible (true);
+                    */
+                    contentPane.add(new MyFrame(contentPane), "PreviewFrame");
+                } catch (JSONException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 CardLayout cardLayout = (CardLayout) contentPane.getLayout();
                 cardLayout.show(contentPane, "PreviewFrame");
             }

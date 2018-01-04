@@ -14,8 +14,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -27,6 +25,7 @@ public class SelectPackFrame extends JPanel {
     
     private JPanel contentPane;
     private Font font;
+    private Jezyk jezyk;
     
     public final JButton makeButton(String text, String button, String rollover, String pressed, int h, int w) throws IOException {
         BufferedImage startButton = ImageIO.read(getClass().getResource("/"+button));
@@ -42,7 +41,7 @@ public class SelectPackFrame extends JPanel {
         tmp_button.setPreferredSize(new Dimension(h, w));
         
         
-        JLabel label = new JLabel(text);
+        JLabel label = new JLabel(jezyk.getText(text));
         label.setFont(font.deriveFont(20f));
         label.setForeground(Color.yellow);
         label.setPreferredSize(new Dimension(h, w));
@@ -65,7 +64,7 @@ public class SelectPackFrame extends JPanel {
     
     public SelectPackFrame(JPanel panel) throws FontFormatException, IOException {
         contentPane = panel;
-        Jezyk jezyk = new Polski();
+        jezyk = new Polski();
         font = Font.createFont(Font.TRUETYPE_FONT, new File("BlizQuadrata.ttf"));
         
         setLayout(new BorderLayout());
@@ -74,12 +73,12 @@ public class SelectPackFrame extends JPanel {
 	
         background.setLayout(new FlowLayout(FlowLayout.CENTER,30,100));
         
-        JButton classic = makeButton("Klasyczny", "Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
-        JButton cobolds = makeButton("Koboldy", "Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
-        JButton knights = makeButton("Rycerze", "Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
-        JButton ungoro = makeButton("Un'goro","Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
-        JButton gadgetzan = makeButton("Gadżeton","Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
-        JButton back = new JButton("Powrót");
+        JButton classic = makeButton("classic", "Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
+        JButton cobolds = makeButton("cobolds", "Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
+        JButton knights = makeButton("knights", "Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
+        JButton ungoro = makeButton("un'goro","Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
+        JButton gadgetzan = makeButton("gadgetzan","Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
+        JButton back = new JButton(jezyk.getText("back"));
         
         back.addActionListener(new ActionListener() {
             @Override

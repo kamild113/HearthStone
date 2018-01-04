@@ -9,7 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,10 +19,10 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.*;
+import org.apache.sling.commons.json.JSONArray;
+import org.apache.sling.commons.json.JSONException;
+import org.apache.sling.commons.json.JSONObject;
 
-//public class MyFrame extends JFrame {
 
 public class MyFrame extends JPanel {
     
@@ -31,20 +32,25 @@ public class MyFrame extends JPanel {
     JLabel labels[][] = new JLabel[8][6];
     private Jezyk jezyk;
     private JPanel contentPane;  
-    String fileName = "settings.hs";
+    Singleton singleton = Singleton.getInstance();
+    String fileName = singleton.getFileName();
     
-    private void makeBars() {
+ 
+    
+    private void makeBars() throws JSONException, IOException {
         JLabel tab[];
         JPanel bar;
-        for(int j=0; j<8; j++) {
+        
+        
+        for(int j=0; j<left_bar_titles.length; j++) {
             tab = new JLabel[6];
             tab[0] = new JLabel(jezyk.getText(left_bar_titles[j]));
-            for(int i=1; i<6; i++)
+            for(int i=1; i<top_bar_titles.length; i++)
                 tab[i] = new JLabel();
 
             bar = new JPanel();
             bar.setLayout(new GridLayout(0, 6));
-            for(int i=0; i<6; i++)
+            for(int i=0; i<top_bar_titles.length; i++)
                 bar.add(tab[i]);
             labels[j] = tab;
             add(bar);
@@ -52,35 +58,27 @@ public class MyFrame extends JPanel {
         loadData();
     }
     
-    private void parseJson(JSONObject obj) {
-        for(int i=0; i<8; i++) {
-            Map m = ((Map) obj.get(left_bar_titles[i]));
-            for(int j=1; j<6; j++) {
-                labels[i][j].setText(m.get(top_bar_titles[j]).toString());
+    private void parseJson(JSONObject obj) throws JSONException {
+        for(int i=1; i<top_bar_titles.length; i++) {
+            for(int j=0; j<left_bar_titles.length; j++) {
+                String label = obj.getJSONObject(top_bar_titles[i]).get(left_bar_titles[j]).toString();
+                labels[j][i].setText(label);
             }
         }
     }
     
-    private void loadData() {
-        Object obj = null;
-        try {
-            obj = new JSONParser().parse(new FileReader(fileName));
-        } catch (IOException ex) {
-            Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-                
-        JSONObject jo = (JSONObject) obj;
+    private void loadData() throws JSONException, IOException {
+        String text = new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_8);
+        JSONObject jo = new JSONObject(text); 
         parseJson(jo);
     }
     
-    private void saveData() {
+    private void saveData() throws JSONException {
         JSONObject jo = new JSONObject();
         Map m;
-        for(int i=0; i<8; i++) {
+        for(int i=0; i<left_bar_titles.length; i++) {
             m = new LinkedHashMap(5);
-            for(int j=1; j<6; j++){
+            for(int j=1; j<top_bar_titles.length; j++){
                 m.put(top_bar_titles[j], labels[i][j].getText());
             }   
             jo.put(left_bar_titles[i], m);
@@ -93,21 +91,23 @@ public class MyFrame extends JPanel {
             Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
                 
-        pw.write(jo.toJSONString());
+        //pw.write(jo.toJSONString());
+        pw.write(jo.toString(4));
+
          
         pw.flush();
         pw.close();        
     }
     
-    private void makeFile() {
+    private void makeFile() throws JSONException {
         JSONObject jo = new JSONObject();
         Map m;
-        for(int i=0; i<8; i++) {
+        for(int i=1; i<top_bar_titles.length; i++) {
             m = new LinkedHashMap(5);
-            for(int j=1; j<6; j++){
-                m.put(top_bar_titles[j], "0");
+            for(int j=0; j<left_bar_titles.length; j++){
+                m.put(left_bar_titles[j], "0");
             }   
-            jo.put(left_bar_titles[i], m);
+            jo.put(top_bar_titles[i], m);
         }
                 
         PrintWriter pw = null;
@@ -117,13 +117,14 @@ public class MyFrame extends JPanel {
             Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
                 
-        pw.write(jo.toJSONString());
+        //pw.write(jo.toJSONString());
+        pw.write(jo.toString(4));
          
         pw.flush();
         pw.close();     
     }
     
-    public MyFrame(JPanel panel) {
+    public MyFrame(JPanel panel) throws JSONException, IOException {
         contentPane = panel;
         setSize(700, 400);
         setLayout(new GridLayout(9,0));
@@ -164,7 +165,7 @@ public class MyFrame extends JPanel {
         top_bar.add(new JLabel(jezyk.getText("un'goro")));
         top_bar.add(new JLabel(jezyk.getText("gadgetzan")));
         add(top_bar);
-        
+
         makeBars(); 
          
          
