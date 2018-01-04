@@ -20,6 +20,9 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -42,13 +45,16 @@ public class SelectCardsFrame extends JPanel implements Strings{
     private int cardsCount = 0;
     private int commonsCount = 0;
     static MouseAdapter ma;
-    Map m = new LinkedHashMap(5);
-  
-    private void saveData() throws JSONException, IOException {
+    Map m = new LinkedHashMap(top_bar_titles.length-1);
+    private long getDaysBetween(Date dateStart, Date dateEnd) {
+        return  Math.round((dateEnd.getTime() - dateStart.getTime()) / (double) 86400000);
+    }
+    private void saveData() throws JSONException, IOException, ParseException {
         Singleton singleton = Singleton.getInstance();
         
         String text = new String(Files.readAllBytes(Paths.get(Sfilename)), StandardCharsets.UTF_8);
         JSONObject jo = new JSONObject(text); 
+        ;
         JSONObject loaded = jo.getJSONObject(singleton.getPack());
 
         for(int i=0; i<left_bar_titles.length; i++) {
@@ -61,7 +67,12 @@ public class SelectCardsFrame extends JPanel implements Strings{
         }
         jo.remove(singleton.getPack());
         jo.put(singleton.getPack(), loaded);
-        
+
+        SimpleDateFormat ft = new SimpleDateFormat (Sdateformat);
+        Date dateEnd = ft.parse("2018-01-24");
+
+        System.out.println(getDaysBetween(ft.parse(new Date().toLocaleString()), dateEnd));
+        jo.accumulate(singleton.getPack()+Ssuffix, ft.format(new Date()));
         PrintWriter pw = null;
         try {
             pw = new PrintWriter(Sfilename);
@@ -197,6 +208,8 @@ public class SelectCardsFrame extends JPanel implements Strings{
                 } catch (JSONException ex) {
                     Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
+                    Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ParseException ex) {
                     Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 CardLayout cardLayout = (CardLayout) contentPane.getLayout();

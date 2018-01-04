@@ -4,7 +4,6 @@ import java.awt.CardLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,7 +23,7 @@ import org.apache.sling.commons.json.JSONObject;
 
 public class MyFrame extends JPanel implements Strings{
     
-    JLabel labels[][] = new JLabel[8][6];
+    JLabel labels[][] = new JLabel[left_bar_titles.length][top_bar_titles.length];
     private Jezyk jezyk;
     private JPanel contentPane;  
     Singleton singleton = Singleton.getInstance();
@@ -37,13 +36,13 @@ public class MyFrame extends JPanel implements Strings{
         
         
         for(int j=0; j<left_bar_titles.length; j++) {
-            tab = new JLabel[6];
+            tab = new JLabel[top_bar_titles.length];
             tab[0] = new JLabel(jezyk.getText(left_bar_titles[j]));
             for(int i=1; i<top_bar_titles.length; i++)
                 tab[i] = new JLabel();
 
             bar = new JPanel();
-            bar.setLayout(new GridLayout(0, 6));
+            bar.setLayout(new GridLayout(0, top_bar_titles.length));
             for(int i=0; i<top_bar_titles.length; i++)
                 bar.add(tab[i]);
             labels[j] = tab;
@@ -71,7 +70,7 @@ public class MyFrame extends JPanel implements Strings{
         JSONObject jo = new JSONObject();
         Map m;
         for(int i=0; i<left_bar_titles.length; i++) {
-            m = new LinkedHashMap(5);
+            m = new LinkedHashMap(top_bar_titles.length-1);
             for(int j=1; j<top_bar_titles.length; j++){
                 m.put(top_bar_titles[j], labels[i][j].getText());
             }   
@@ -92,52 +91,21 @@ public class MyFrame extends JPanel implements Strings{
         pw.close();        
     }
     
-    private void makeFile() throws JSONException {
-        JSONObject jo = new JSONObject();
-        Map m;
-        
-        for(int i=1; i<top_bar_titles.length; i++) {
-            m = new LinkedHashMap(5);
-            for(int j=0; j<left_bar_titles.length; j++){
-                m.put(left_bar_titles[j], "0");
-            }   
-            jo.put(top_bar_titles[i], m);
-        }
-                
-        PrintWriter pw = null;
-        try {
-            pw = new PrintWriter(Sfilename);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-                
-        pw.write(jo.toString(4));
-         
-        pw.flush();
-        pw.close();     
-    }
     
     public MyFrame(JPanel panel) throws JSONException, IOException {
         contentPane = panel;
         setSize(700, 400);
-        setLayout(new GridLayout(9,0));
+        setLayout(new GridLayout(left_bar_titles.length+1,0));
 
         jezyk = new Polski();
      
-        if(!(new File(Sfilename).isFile())) {
-            System.out.println("Make file...");
-            makeFile();
-            System.out.println("File done.");
-        }
         JPanel top_bar = new JPanel();
-        top_bar.setLayout(new GridLayout(0, 6));
+        top_bar.setLayout(new GridLayout(0, top_bar_titles.length));
         JButton przycisk = new JButton(jezyk.getText(Sback));
         top_bar.add(przycisk);
-        top_bar.add(new JLabel(jezyk.getText(top_bar_titles[1])));
-        top_bar.add(new JLabel(jezyk.getText(top_bar_titles[2])));
-        top_bar.add(new JLabel(jezyk.getText(top_bar_titles[3])));
-        top_bar.add(new JLabel(jezyk.getText(top_bar_titles[4])));
-        top_bar.add(new JLabel(jezyk.getText(top_bar_titles[5])));
+        for(int i=1; i<top_bar_titles.length; i++)
+            top_bar.add(new JLabel(jezyk.getText(top_bar_titles[i])));
+
         add(top_bar);
 
         makeBars(); 

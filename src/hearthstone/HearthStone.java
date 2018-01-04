@@ -1,17 +1,27 @@
 package hearthstone;
 
+import static hearthstone.Strings.Sfilename;
+import static hearthstone.Strings.left_bar_titles;
+import static hearthstone.Strings.top_bar_titles;
 import java.awt.CardLayout;
 import java.awt.FontFormatException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
+import org.apache.sling.commons.json.JSONObject;
 
 public class HearthStone implements Strings {
     private static JFrame frame;
@@ -21,6 +31,33 @@ public class HearthStone implements Strings {
     private SelectPackFrame panel2;
     static MouseAdapter ma;
    
+    private static void makeFile() throws JSONException {
+        JSONObject jo = new JSONObject();
+        Map m;
+        
+        for(int i=1; i<top_bar_titles.length; i++) {
+            m = new LinkedHashMap(5);
+            for(int j=0; j<left_bar_titles.length; j++){
+                m.put(left_bar_titles[j], "0");
+            }   
+            jo.put(top_bar_titles[i], m);
+        }
+        for(int i=1; i<top_bar_titles.length; i++)
+            jo.put(top_bar_titles[i]+Ssuffix, new JSONArray());
+        
+                
+        PrintWriter pw = null;
+        try {
+            pw = new PrintWriter(Sfilename);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                
+        pw.write(jo.toString(4));
+         
+        pw.flush();
+        pw.close();     
+    }
     
     private void displayGUI() throws IOException, FontFormatException, JSONException
     {
@@ -70,6 +107,15 @@ public class HearthStone implements Strings {
             
            public void run()
             {
+                if(!(new File(Sfilename).isFile())) {
+                    System.out.println("Make file...");
+                    try {
+                        makeFile();
+                    } catch (JSONException ex) {
+                        Logger.getLogger(HearthStone.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    System.out.println("File done.");
+                }
                 try {
                     new HearthStone().displayGUI();
                 } catch (IOException ex) {

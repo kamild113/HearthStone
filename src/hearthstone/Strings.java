@@ -1,6 +1,7 @@
 package hearthstone;
 
 public interface Strings {
+    
     String top_bar_titles[] = {"nothing", "classic", "cobolds", "knights", "un'goro", "gadgetzan"};
     String left_bar_titles[] = {"common", "gcommon", "rare", "grare", "epic", "gepic", "legend", "glegend"};
     String Sback = "back";
@@ -14,5 +15,6 @@ public interface Strings {
     String Sselectcardsframe = "SelectCardsFrame";
     String Stitle = "HearthStone Packs Counter";
     String Sfilename = "settings.hs";
-    
+    String Ssuffix = "_s";
+    String Sdateformat = "yyyy-MM-dd";
 }
