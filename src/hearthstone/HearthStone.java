@@ -13,21 +13,19 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.apache.sling.commons.json.JSONException;
 
-public class HearthStone {
+public class HearthStone implements Strings {
     private static JFrame frame;
     private JPanel contentPane;
     
     private MainFrame panel1;
-    private MyFrame panel2;
-    private SelectPackFrame panel3;
-    private SelectCardsFrame panel4;
+    private SelectPackFrame panel2;
     static MouseAdapter ma;
    
     
     private void displayGUI() throws IOException, FontFormatException, JSONException
     {
         
-        frame = new JFrame("HearthStone Packs Counter");
+        frame = new JFrame(Stitle);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.addMouseListener(ma);
@@ -35,10 +33,9 @@ public class HearthStone {
         JPanel contentPane = new JPanel();
         contentPane.setLayout(new CardLayout());
         panel1 = new MainFrame(contentPane);
-        panel2 = new MyFrame(contentPane);
-        panel3 = new SelectPackFrame(contentPane);
-        contentPane.add(panel1, "MainFrame"); 
-        contentPane.add(panel3, "SelectPackFrame");
+        panel2 = new SelectPackFrame(contentPane);
+        contentPane.add(panel1, Smainframe); 
+        contentPane.add(panel2, Sselectpackframe);
         
         frame.setContentPane(contentPane);
         ImageIcon img = new ImageIcon(getClass().getResource("/pack.png"));

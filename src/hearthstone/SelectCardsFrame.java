@@ -34,21 +34,20 @@ import javax.swing.SwingUtilities;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 
-public class SelectCardsFrame extends JPanel {
+public class SelectCardsFrame extends JPanel implements Strings{
     
     private JPanel contentPane;
     private Font font;
     private JButton addButton;
     private int cardsCount = 0;
     private int commonsCount = 0;
-    String left_bar_titles[] = new String[8];
     static MouseAdapter ma;
     Map m = new LinkedHashMap(5);
   
     private void saveData() throws JSONException, IOException {
         Singleton singleton = Singleton.getInstance();
         
-        String text = new String(Files.readAllBytes(Paths.get(singleton.getFileName())), StandardCharsets.UTF_8);
+        String text = new String(Files.readAllBytes(Paths.get(Sfilename)), StandardCharsets.UTF_8);
         JSONObject jo = new JSONObject(text); 
         JSONObject loaded = jo.getJSONObject(singleton.getPack());
 
@@ -65,7 +64,7 @@ public class SelectCardsFrame extends JPanel {
         
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(singleton.getFileName());
+            pw = new PrintWriter(Sfilename);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -103,7 +102,7 @@ public class SelectCardsFrame extends JPanel {
                     if(Integer.parseInt(label.getText()) > 0) {
                         int count = Integer.parseInt(label.getText())-1;
                         label.setText(""+count);
-                        if((card.equals("common") || card.equals("gcommon"))) 
+                        if((card.equals(left_bar_titles[0]) || card.equals(left_bar_titles[1]))) /// Common && GCommon
                             commonsCount--;
                         cardsCount--;
                         m.remove(card, label.getText());
@@ -111,7 +110,7 @@ public class SelectCardsFrame extends JPanel {
                     }
                 } else {
                     if(cardsCount < 5) {
-                        if((card.equals("common") || card.equals("gcommon"))) {
+                        if((card.equals(left_bar_titles[0]) || card.equals(left_bar_titles[1]))) {  /// Common && GCommon
                             if(commonsCount < 4) {
                                 int count = Integer.parseInt(label.getText())+1;
                                 label.setText(""+count);
@@ -141,17 +140,8 @@ public class SelectCardsFrame extends JPanel {
         contentPane = panel;
         Jezyk jezyk = new Polski();
         
-        left_bar_titles[0] = "common";
-        left_bar_titles[1] = "gcommon";
-        left_bar_titles[2] = "rare";
-        left_bar_titles[3] = "grare";
-        left_bar_titles[4] = "epic";
-        left_bar_titles[5] = "gepic";
-        left_bar_titles[6] = "legend";
-        left_bar_titles[7] = "glegend";
-        
         try {
-            font = Font.createFont(Font.TRUETYPE_FONT, new File("BlizQuadrata.ttf"));
+            font = Font.createFont(Font.TRUETYPE_FONT, new File(Sfont));
         } catch (FontFormatException ex) {
             Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -174,28 +164,28 @@ public class SelectCardsFrame extends JPanel {
         JButton legend = null;
         JButton glegend = null;
         try {
-            common = makeButton("common", "cards/common.png", "cards/common_hover.png", "cards/common_active.png", 110, 150);
-            gcommon = makeButton("gcommon", "cards/gcommon.png", "cards/gcommon_hover.png", "cards/gcommon_active.png", 110, 150);
-            rare = makeButton("rare", "cards/rare.png", "cards/rare_hover.png", "cards/rare_active.png", 110, 150);
-            grare = makeButton("grare", "cards/grare.png", "cards/grare_hover.png", "cards/grare_active.png", 110, 150);
-            epic = makeButton("epic", "cards/epic.png", "cards/epic_hover.png", "cards/epic_active.png", 110, 150);
-            gepic = makeButton("gepic", "cards/gepic.png", "cards/gepic_hover.png", "cards/gepic_active.png", 110, 150);
-            legend = makeButton("legend", "cards/legend.png", "cards/legend_hover.png", "cards/legend_active.png", 110, 150);
-            glegend = makeButton("glegend", "cards/glegend.png", "cards/glegend_hover.png", "cards/glegend_active.png", 110, 150);
+            common = makeButton(left_bar_titles[0], "cards/common.png", "cards/common_hover.png", "cards/common_active.png", 110, 150);
+            gcommon = makeButton(left_bar_titles[1], "cards/gcommon.png", "cards/gcommon_hover.png", "cards/gcommon_active.png", 110, 150);
+            rare = makeButton(left_bar_titles[2], "cards/rare.png", "cards/rare_hover.png", "cards/rare_active.png", 110, 150);
+            grare = makeButton(left_bar_titles[3], "cards/grare.png", "cards/grare_hover.png", "cards/grare_active.png", 110, 150);
+            epic = makeButton(left_bar_titles[4], "cards/epic.png", "cards/epic_hover.png", "cards/epic_active.png", 110, 150);
+            gepic = makeButton(left_bar_titles[5], "cards/gepic.png", "cards/gepic_hover.png", "cards/gepic_active.png", 110, 150);
+            legend = makeButton(left_bar_titles[6], "cards/legend.png", "cards/legend_hover.png", "cards/legend_active.png", 110, 150);
+            glegend = makeButton(left_bar_titles[7], "cards/glegend.png", "cards/glegend_hover.png", "cards/glegend_active.png", 110, 150);
                 
         } catch (IOException ex) {
             Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        JButton back = new JButton("Powrót");
-        addButton = new JButton("Dodaj");
+        JButton back = new JButton(jezyk.getText(Sback));
+        addButton = new JButton(jezyk.getText(Sadd));
         addButton.setEnabled(false);
         
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 CardLayout cardLayout = (CardLayout) contentPane.getLayout();
-                cardLayout.show(contentPane, "SelectPackFrame");
+                cardLayout.show(contentPane, Sselectpackframe);
             }
         });
         
@@ -210,7 +200,7 @@ public class SelectCardsFrame extends JPanel {
                     Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 CardLayout cardLayout = (CardLayout) contentPane.getLayout();
-                cardLayout.show(contentPane, "MainFrame");
+                cardLayout.show(contentPane, Smainframe);
             }
         });
         

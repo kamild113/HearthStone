@@ -21,7 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class SelectPackFrame extends JPanel {
+public class SelectPackFrame extends JPanel implements Strings {
     
     private JPanel contentPane;
     private Font font;
@@ -54,9 +54,9 @@ public class SelectPackFrame extends JPanel {
                 Singleton singleton = Singleton.getInstance();
                 singleton.setPack(text);
                 
-                contentPane.add(new SelectCardsFrame(contentPane), "SelectCardsFrame");
+                contentPane.add(new SelectCardsFrame(contentPane), Sselectcardsframe);
                 CardLayout cardLayout = (CardLayout) contentPane.getLayout();
-                cardLayout.show(contentPane, "SelectCardsFrame");             
+                cardLayout.show(contentPane, Sselectcardsframe);             
             }
         });
         return tmp_button;
@@ -65,7 +65,7 @@ public class SelectPackFrame extends JPanel {
     public SelectPackFrame(JPanel panel) throws FontFormatException, IOException {
         contentPane = panel;
         jezyk = new Polski();
-        font = Font.createFont(Font.TRUETYPE_FONT, new File("BlizQuadrata.ttf"));
+        font = Font.createFont(Font.TRUETYPE_FONT, new File(Sfont));
         
         setLayout(new BorderLayout());
 	JLabel background=new JLabel(new ImageIcon(getClass().getResource("/background2.jpg")));
@@ -73,12 +73,12 @@ public class SelectPackFrame extends JPanel {
 	
         background.setLayout(new FlowLayout(FlowLayout.CENTER,30,100));
         
-        JButton classic = makeButton("classic", "Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
-        JButton cobolds = makeButton("cobolds", "Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
-        JButton knights = makeButton("knights", "Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
-        JButton ungoro = makeButton("un'goro","Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
-        JButton gadgetzan = makeButton("gadgetzan","Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
-        JButton back = new JButton(jezyk.getText("back"));
+        JButton classic = makeButton(top_bar_titles[1], "Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
+        JButton cobolds = makeButton(top_bar_titles[2], "Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
+        JButton knights = makeButton(top_bar_titles[3], "Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
+        JButton ungoro = makeButton(top_bar_titles[4],"Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
+        JButton gadgetzan = makeButton(top_bar_titles[5],"Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
+        JButton back = new JButton(jezyk.getText(Sback));
         
         back.addActionListener(new ActionListener() {
             @Override

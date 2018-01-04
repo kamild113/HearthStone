@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -19,21 +18,16 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 
 
-public class MyFrame extends JPanel {
-    
-    String top_bar_titles[] = new String[6];
-    String left_bar_titles[] = new String[8];
+public class MyFrame extends JPanel implements Strings{
     
     JLabel labels[][] = new JLabel[8][6];
     private Jezyk jezyk;
     private JPanel contentPane;  
     Singleton singleton = Singleton.getInstance();
-    String fileName = singleton.getFileName();
     
  
     
@@ -68,7 +62,7 @@ public class MyFrame extends JPanel {
     }
     
     private void loadData() throws JSONException, IOException {
-        String text = new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_8);
+        String text = new String(Files.readAllBytes(Paths.get(Sfilename)), StandardCharsets.UTF_8);
         JSONObject jo = new JSONObject(text); 
         parseJson(jo);
     }
@@ -86,12 +80,11 @@ public class MyFrame extends JPanel {
                 
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(fileName);
+            pw = new PrintWriter(Sfilename);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
                 
-        //pw.write(jo.toJSONString());
         pw.write(jo.toString(4));
 
          
@@ -102,6 +95,7 @@ public class MyFrame extends JPanel {
     private void makeFile() throws JSONException {
         JSONObject jo = new JSONObject();
         Map m;
+        
         for(int i=1; i<top_bar_titles.length; i++) {
             m = new LinkedHashMap(5);
             for(int j=0; j<left_bar_titles.length; j++){
@@ -112,12 +106,11 @@ public class MyFrame extends JPanel {
                 
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(fileName);
+            pw = new PrintWriter(Sfilename);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
                 
-        //pw.write(jo.toJSONString());
         pw.write(jo.toString(4));
          
         pw.flush();
@@ -130,40 +123,21 @@ public class MyFrame extends JPanel {
         setLayout(new GridLayout(9,0));
 
         jezyk = new Polski();
-        
-        top_bar_titles[0] = "nothing";
-        top_bar_titles[1] = "classic";
-        top_bar_titles[2] = "cobolds";
-        top_bar_titles[3] = "knights";
-        top_bar_titles[4] = "un'goro";
-        top_bar_titles[5] = "gadgetzan";
-        
-        left_bar_titles[0] = "common";
-        left_bar_titles[1] = "gcommon";
-        left_bar_titles[2] = "rare";
-        left_bar_titles[3] = "grare";
-        left_bar_titles[4] = "epic";
-        left_bar_titles[5] = "gepic";
-        left_bar_titles[6] = "legend";
-        left_bar_titles[7] = "glegend";
-        
-        
-        if(!(new File(fileName).isFile())) {
+     
+        if(!(new File(Sfilename).isFile())) {
             System.out.println("Make file...");
             makeFile();
             System.out.println("File done.");
         }
         JPanel top_bar = new JPanel();
         top_bar.setLayout(new GridLayout(0, 6));
-        JButton przycisk = new JButton("Cofnij");
-        //JButton przycisk2 = new JButton("Cofnij");
+        JButton przycisk = new JButton(jezyk.getText(Sback));
         top_bar.add(przycisk);
-        //top_bar.add(przycisk2);
-        top_bar.add(new JLabel(jezyk.getText("classic")));
-        top_bar.add(new JLabel(jezyk.getText("cobolds")));
-        top_bar.add(new JLabel(jezyk.getText("knights")));
-        top_bar.add(new JLabel(jezyk.getText("un'goro")));
-        top_bar.add(new JLabel(jezyk.getText("gadgetzan")));
+        top_bar.add(new JLabel(jezyk.getText(top_bar_titles[1])));
+        top_bar.add(new JLabel(jezyk.getText(top_bar_titles[2])));
+        top_bar.add(new JLabel(jezyk.getText(top_bar_titles[3])));
+        top_bar.add(new JLabel(jezyk.getText(top_bar_titles[4])));
+        top_bar.add(new JLabel(jezyk.getText(top_bar_titles[5])));
         add(top_bar);
 
         makeBars(); 
@@ -173,7 +147,7 @@ public class MyFrame extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e){
                 CardLayout cardLayout = (CardLayout) contentPane.getLayout();
-                cardLayout.show(contentPane, "MainFrame");
+                cardLayout.show(contentPane, Smainframe);
             }
          });  
          

@@ -22,7 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.apache.sling.commons.json.JSONException;
  
-public class MainFrame extends JPanel { 
+public class MainFrame extends JPanel implements Strings { 
     
     private JPanel contentPane;  
     
@@ -31,7 +31,7 @@ public class MainFrame extends JPanel {
         contentPane = panel;
         Jezyk jezyk = new Polski();
         
-        Font font = Font.createFont(Font.TRUETYPE_FONT, new File("BlizQuadrata.ttf"));
+        Font font = Font.createFont(Font.TRUETYPE_FONT, new File(Sfont));
         setLayout(new BorderLayout());
 
 	JLabel background=new JLabel(new ImageIcon(getClass().getResource("/background2.jpg")));
@@ -62,7 +62,7 @@ public class MainFrame extends JPanel {
         viewPacks.setContentAreaFilled(false);
         viewPacks.setFocusable(false);
         
-        JLabel newPackLabel = new JLabel(jezyk.getText("open"));
+        JLabel newPackLabel = new JLabel(jezyk.getText(Sopen));
         newPackLabel.setFont(font.deriveFont(35f));
         newPackLabel.setForeground(Color.yellow);
         newPackLabel.setPreferredSize(new Dimension(220, 245));
@@ -70,7 +70,7 @@ public class MainFrame extends JPanel {
         newPackLabel.setAlignmentX(CENTER_ALIGNMENT);
         newPack.add(newPackLabel);
         
-        JLabel viewPacksLabel = new JLabel(jezyk.getText("view"));
+        JLabel viewPacksLabel = new JLabel(jezyk.getText(Sview));
         viewPacksLabel.setFont(font.deriveFont(35f));
         viewPacksLabel.setForeground(Color.yellow);
         viewPacksLabel.setPreferredSize(new Dimension(220, 245));
@@ -89,14 +89,14 @@ public class MainFrame extends JPanel {
                     frame.pack();
                     frame.setVisible (true);
                     */
-                    contentPane.add(new MyFrame(contentPane), "PreviewFrame");
+                    contentPane.add(new MyFrame(contentPane), Spreviewframe);
                 } catch (JSONException ex) {
                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 CardLayout cardLayout = (CardLayout) contentPane.getLayout();
-                cardLayout.show(contentPane, "PreviewFrame");
+                cardLayout.show(contentPane, Spreviewframe);
             }
         });
         
@@ -104,7 +104,7 @@ public class MainFrame extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 CardLayout cardLayout = (CardLayout) contentPane.getLayout();
-                cardLayout.show(contentPane, "SelectPackFrame");
+                cardLayout.show(contentPane, Sselectpackframe);
             }
         });
         
