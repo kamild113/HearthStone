@@ -17,4 +17,6 @@ public interface Strings {
     String Sfilename = "settings.hs";
     String Ssuffix = "_s";
     String Sdateformat = "yyyy-MM-dd";
+    String Spackhistory = "PackHistory";
+    String pack_history[] = {"PacksCount", "PacksFromLegend", "DaysFromLegend"};
 }

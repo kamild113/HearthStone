@@ -73,11 +73,9 @@ public class SelectPackFrame extends JPanel implements Strings {
 	
         background.setLayout(new FlowLayout(FlowLayout.CENTER,30,100));
         
-        JButton classic = makeButton(top_bar_titles[1], "Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
-        JButton cobolds = makeButton(top_bar_titles[2], "Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
-        JButton knights = makeButton(top_bar_titles[3], "Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
-        JButton ungoro = makeButton(top_bar_titles[4],"Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
-        JButton gadgetzan = makeButton(top_bar_titles[5],"Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135);
+        for(int i=1; i<top_bar_titles.length; i++)
+            background.add(makeButton(top_bar_titles[i], "Spack.png", "Spack_hover.png", "Spack_active.png", 100, 135));
+        
         JButton back = new JButton(jezyk.getText(Sback));
         
         back.addActionListener(new ActionListener() {
@@ -88,11 +86,6 @@ public class SelectPackFrame extends JPanel implements Strings {
             }
         });
         
-        background.add(classic);
-        background.add(cobolds);
-        background.add(knights);
-        background.add(ungoro);
-        background.add(gadgetzan);
         background.add(back);
         
         setPreferredSize(new Dimension(700,400));

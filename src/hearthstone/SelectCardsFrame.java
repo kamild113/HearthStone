@@ -46,15 +46,17 @@ public class SelectCardsFrame extends JPanel implements Strings{
     private int commonsCount = 0;
     static MouseAdapter ma;
     Map m = new LinkedHashMap(top_bar_titles.length-1);
+    
     private long getDaysBetween(Date dateStart, Date dateEnd) {
         return  Math.round((dateEnd.getTime() - dateStart.getTime()) / (double) 86400000);
     }
+    
     private void saveData() throws JSONException, IOException, ParseException {
         Singleton singleton = Singleton.getInstance();
         
         String text = new String(Files.readAllBytes(Paths.get(Sfilename)), StandardCharsets.UTF_8);
         JSONObject jo = new JSONObject(text); 
-        ;
+
         JSONObject loaded = jo.getJSONObject(singleton.getPack());
 
         for(int i=0; i<left_bar_titles.length; i++) {
@@ -68,11 +70,11 @@ public class SelectCardsFrame extends JPanel implements Strings{
         jo.remove(singleton.getPack());
         jo.put(singleton.getPack(), loaded);
 
-        SimpleDateFormat ft = new SimpleDateFormat (Sdateformat);
-        Date dateEnd = ft.parse("2018-01-24");
+        
 
-        System.out.println(getDaysBetween(ft.parse(new Date().toLocaleString()), dateEnd));
-        jo.accumulate(singleton.getPack()+Ssuffix, ft.format(new Date()));
+        //System.out.println(getDaysBetween(ft.parse(new Date().toLocaleString()), dateEnd));
+        JSONObject tmp = new JSONObject(m);
+        jo.accumulate(singleton.getPack()+Ssuffix, tmp);
         PrintWriter pw = null;
         try {
             pw = new PrintWriter(Sfilename);
@@ -148,7 +150,9 @@ public class SelectCardsFrame extends JPanel implements Strings{
     }
     
     public SelectCardsFrame(JPanel panel) {
+        SimpleDateFormat ft = new SimpleDateFormat (Sdateformat);
         contentPane = panel;
+        m.put("date", ft.format(new Date()));
         Jezyk jezyk = new Polski();
         
         try {

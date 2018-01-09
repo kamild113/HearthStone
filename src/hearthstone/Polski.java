@@ -3,7 +3,7 @@ package hearthstone;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Polski implements Jezyk {
+public class Polski implements Jezyk, Strings {
     private Map<String, String> mapa = new HashMap<>();
     
     public Polski() {
@@ -32,6 +32,13 @@ public class Polski implements Jezyk {
         mapa.put("un'goro", "Un'goro");
         mapa.put("gadgetzan", "Gadżeton");
         // PAKIETY //
+        
+        // INNE //
+        mapa.put("PacksCount", "Otworzone pakiety");
+        mapa.put("PacksFromLegend", "Pakietów od ostatniej legendy");
+        mapa.put("DaysFromLegend", "Dni od ostatniej legendy");
+        
+        // INNE //
         
     }
     
