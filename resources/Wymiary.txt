@@ -1,0 +1,5 @@
+- zwiększ wymiary płótna o 50
+- przyciemnienie na 50
+- zwiększ zaznaczenie o 20
+- rozmycie Gaussa na 40
+- wymiary 110 x 135

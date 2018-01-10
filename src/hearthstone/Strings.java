@@ -2,7 +2,7 @@ package hearthstone;
 
 public interface Strings {
     
-    String top_bar_titles[] = {"nothing", "classic", "cobolds", "knights", "un'goro", "gadgetzan"};
+    String top_bar_titles[] = {"nothing", "classic", "kobolds", "knights", "un'goro", "gadgetzan"};
     String left_bar_titles[] = {"common", "gcommon", "rare", "grare", "epic", "gepic", "legend", "glegend"};
     String Sback = "back";
     String Sadd = "add";
@@ -16,7 +16,7 @@ public interface Strings {
     String Stitle = "HearthStone Packs Counter";
     String Sfilename = "settings.hs";
     String Ssuffix = "_s";
-    String Sdateformat = "yyyy-MM-dd";
+    String Sdateformat = "yyyy-MM-dd HH:mm:ss";
     String Spackhistory = "PackHistory";
     String pack_history[] = {"PacksCount", "PacksFromLegend", "DaysFromLegend"};
 }

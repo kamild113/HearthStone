@@ -8,10 +8,10 @@ public class Polski implements Jezyk, Strings {
     
     public Polski() {
         // MENU //
-        mapa.put("open", "Otwórz");
-        mapa.put("view", "Podgląd");
-        mapa.put("back", "Powrót");
-        mapa.put("add", "Dodaj");
+        mapa.put(Sopen, "Otwórz");
+        mapa.put(Sview, "Podgląd");
+        mapa.put(Sback, "Powrót");
+        mapa.put(Sadd, "Dodaj");
         // MENU//
         
         // RZADKOŚĆ //
@@ -27,7 +27,7 @@ public class Polski implements Jezyk, Strings {
         
         // PAKIETY //
         mapa.put("classic", "Klasyczny");
-        mapa.put("cobolds", "Koboldy");
+        mapa.put("kobolds", "Koboldy");
         mapa.put("knights", "Rycerze");
         mapa.put("un'goro", "Un'goro");
         mapa.put("gadgetzan", "Gadżeton");
@@ -37,7 +37,6 @@ public class Polski implements Jezyk, Strings {
         mapa.put("PacksCount", "Otworzone pakiety");
         mapa.put("PacksFromLegend", "Pakietów od ostatniej legendy");
         mapa.put("DaysFromLegend", "Dni od ostatniej legendy");
-        
         // INNE //
         
     }

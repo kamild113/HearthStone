@@ -1,15 +1,5 @@
 {
-    "cobolds": {
-        "common": "0",
-        "gcommon": "0",
-        "rare": "0",
-        "grare": "0",
-        "epic": "0",
-        "gepic": "0",
-        "legend": "0",
-        "glegend": "0"
-    },
-    "knights": {
+    "kobolds": {
         "common": "0",
         "gcommon": "0",
         "rare": "0",
@@ -39,44 +29,40 @@
         "legend": "0",
         "glegend": "0"
     },
-    "classic_s": [
-        {
-            "date": "2018-01-07",
-            "legend": "1",
-            "rare": "1",
-            "gcommon": "1",
-            "common": "1",
-            "epic": "1"
-        },
-        {
-            "date": "2018-01-09",
-            "glegend": "1",
-            "grare": "1",
-            "rare": "1",
-            "gcommon": "1",
-            "common": "1"
-        },
-        {
-            "date": "2018-01-07",
-            "legend": "1",
-            "rare": "1",
-            "gcommon": "1",
-            "common": "1",
-            "epic": "1"
-        }
-    ],
-    "cobolds_s": [],
-    "knights_s": [],
+    "classic_s": [{
+        "date": "2018-01-10 21:53:22",
+        "common": "1",
+        "epic": "1",
+        "gepic": "1",
+        "gcommon": "1",
+        "rare": "1"
+    }],
+    "kobolds_s": [],
+    "knights_s": [{
+        "date": "2018-01-10 21:53:33",
+        "gcommon": "2",
+        "gepic": "3"
+    }],
     "un'goro_s": [],
     "gadgetzan_s": [],
     "classic": {
-        "gepic": "0",
-        "grare": "1",
-        "glegend": "1",
-        "common": "3",
-        "gcommon": "3",
-        "rare": "3",
-        "epic": "2",
-        "legend": "2"
+        "grare": "0",
+        "legend": "0",
+        "glegend": "0",
+        "common": "1",
+        "gcommon": "1",
+        "rare": "1",
+        "epic": "1",
+        "gepic": "1"
+    },
+    "knights": {
+        "common": "0",
+        "rare": "0",
+        "grare": "0",
+        "epic": "0",
+        "legend": "0",
+        "glegend": "0",
+        "gcommon": "2",
+        "gepic": "3"
     }
 }

@@ -1,9 +1,12 @@
 package hearthstone;
 
+import static hearthstone.HearthStone.frame;
 import java.awt.CardLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -108,7 +112,6 @@ public class MyFrame extends JPanel implements Strings{
         JButton przycisk = new JButton(jezyk.getText(Sback));
         top_bar.add(przycisk);
         for(int i=1; i<top_bar_titles.length; i++){
-            //top_bar.add(new JLabel(jezyk.getText(top_bar_titles[i])));
             String title = top_bar_titles[i];
             JButton tmpButton = new JButton(jezyk.getText(title));
             tmpButton.setBorderPainted(false);
@@ -118,12 +121,23 @@ public class MyFrame extends JPanel implements Strings{
             @Override
             public void actionPerformed(ActionEvent e){
                 try {
+                    HearthStone.frame.setEnabled(false);
                     JFrame frame = new JFrame (jezyk.getText(Spackhistory)+" - "+jezyk.getText(title));
                     frame.getContentPane().add(new PackHistoryFrame(title));
+                    ImageIcon img = new ImageIcon(getClass().getResource("/pack.png"));
+                    frame.setIconImage(img.getImage());
                     frame.pack();
                     frame.setVisible (true);
+                    frame.setLocationRelativeTo(contentPane);
                     frame.setResizable(false);
+                    frame.addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosing(WindowEvent e) {
+                            HearthStone.frame.setEnabled(true);
+                        }
+                    });
                     frame.setSize(400,400);
+                    
                 } catch (ParseException ex) {
                     Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }

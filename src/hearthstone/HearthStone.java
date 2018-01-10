@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -24,7 +25,7 @@ import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 
 public class HearthStone implements Strings {
-    private static JFrame frame;
+    public static JFrame frame;
     private JPanel contentPane;
     
     private MainFrame panel1;
@@ -59,9 +60,8 @@ public class HearthStone implements Strings {
         pw.close();     
     }
     
-    private void displayGUI() throws IOException, FontFormatException, JSONException
-    {
-        
+    private void displayGUI() throws IOException, FontFormatException, JSONException, ParseException
+    { 
         frame = new JFrame(Stitle);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
@@ -70,9 +70,9 @@ public class HearthStone implements Strings {
         JPanel contentPane = new JPanel();
         contentPane.setLayout(new CardLayout());
         panel1 = new MainFrame(contentPane);
-        panel2 = new SelectPackFrame(contentPane);
+        //panel2 = new SelectPackFrame(contentPane);
         contentPane.add(panel1, Smainframe); 
-        contentPane.add(panel2, Sselectpackframe);
+        //contentPane.add(panel2, Sselectpackframe);
         
         frame.setContentPane(contentPane);
         ImageIcon img = new ImageIcon(getClass().getResource("/pack.png"));
@@ -123,6 +123,8 @@ public class HearthStone implements Strings {
                 } catch (FontFormatException ex) {
                     Logger.getLogger(HearthStone.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (JSONException ex) {
+                    Logger.getLogger(HearthStone.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ParseException ex) {
                     Logger.getLogger(HearthStone.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
