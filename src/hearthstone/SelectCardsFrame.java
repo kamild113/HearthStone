@@ -1,5 +1,7 @@
 package hearthstone;
 
+import static hearthstone.HearthStone.jezyk;
+import static hearthstone.Strings.Stitle;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -7,13 +9,11 @@ import static java.awt.Component.CENTER_ALIGNMENT;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -40,16 +41,13 @@ import org.apache.sling.commons.json.JSONObject;
 public class SelectCardsFrame extends JPanel implements Strings{
     
     private JPanel contentPane;
-    private Font font;
-    private JButton addButton;
-    private int cardsCount = 0;
-    private int commonsCount = 0;
+    static private JButton addButton;
+    static private int cardsCount = 0;
+    static private int commonsCount = 0;
     static MouseAdapter ma;
-    Map m = new LinkedHashMap(top_bar_titles.length-1);
+    Map m = new LinkedHashMap(top_bar_titles.length);
     
-    private long getDaysBetween(Date dateStart, Date dateEnd) {
-        return  Math.round((dateEnd.getTime() - dateStart.getTime()) / (double) 86400000);
-    }
+    static Vector<JLabel> labels=new Vector<JLabel>();
     
     private void saveData() throws JSONException, IOException, ParseException {
         Singleton singleton = Singleton.getInstance();
@@ -70,22 +68,28 @@ public class SelectCardsFrame extends JPanel implements Strings{
         jo.remove(singleton.getPack());
         jo.put(singleton.getPack(), loaded);
 
-        
-
-        //System.out.println(getDaysBetween(ft.parse(new Date().toLocaleString()), dateEnd));
         JSONObject tmp = new JSONObject(m);
         jo.accumulate(singleton.getPack()+Ssuffix, tmp);
         PrintWriter pw = null;
         try {
             pw = new PrintWriter(Sfilename);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PreviewFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         pw.write(jo.toString(4));
          
         pw.flush();
         pw.close();        
+    }
+    
+    public static void resetLabels() {
+        for(int i=0; i<labels.size(); i++) {
+            labels.get(i).setText("0");
+        }
+        cardsCount = 0;
+        commonsCount = 0;
+        addButton.setEnabled(false);
     }
     
     public final JButton makeButton(String card, String button, String rollover, String pressed, int h, int w) throws IOException {
@@ -103,9 +107,10 @@ public class SelectCardsFrame extends JPanel implements Strings{
         
         
         JLabel label = new JLabel("0");
-        label.setFont(font.deriveFont(30f));
+        labels.add(label);
+        label.setFont(new Font("Serif", Font.BOLD, 16));
         label.setForeground(Color.yellow);
-        label.setBorder(BorderFactory.createEmptyBorder( 65 , 5, 0, 0 )); // 65px w dol, 5px w prawo
+        label.setBorder(BorderFactory.createEmptyBorder( 65 , 7, 0, 0 )); // 65px w dol, 5px w prawo
         label.setAlignmentX(CENTER_ALIGNMENT);
         tmp_button.add(label);
         ma = new MouseAdapter() {
@@ -149,58 +154,34 @@ public class SelectCardsFrame extends JPanel implements Strings{
         return tmp_button;
     }
     
-    public SelectCardsFrame(JPanel panel) {
+    public SelectCardsFrame(JPanel panel) throws IOException {
         SimpleDateFormat ft = new SimpleDateFormat (Sdateformat);
+        
         contentPane = panel;
         m.put("date", ft.format(new Date()));
-        Jezyk jezyk = new Polski();
-        
-        try {
-            font = Font.createFont(Font.TRUETYPE_FONT, new File(Sfont));
-        } catch (FontFormatException ex) {
-            Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Jezyk jezyk = HearthStone.jezyk;
         
         setLayout(new BorderLayout());
 	JLabel background=new JLabel(new ImageIcon(getClass().getResource("/background2.jpg")));
 	add(background);
 	
         background.setLayout(new FlowLayout(FlowLayout.CENTER, 50, 10));
-        Singleton singleton = Singleton.getInstance();
-        String text = singleton.getPack();
-        JButton common = null;
-        JButton gcommon = null;
-        JButton rare = null;
-        JButton grare = null;
-        JButton epic = null;
-        JButton gepic = null;
-        JButton legend = null;
-        JButton glegend = null;
-        try {
-            common = makeButton(left_bar_titles[0], "cards/common.png", "cards/common_hover.png", "cards/common_active.png", 110, 150);
-            gcommon = makeButton(left_bar_titles[1], "cards/gcommon.png", "cards/gcommon_hover.png", "cards/gcommon_active.png", 110, 150);
-            rare = makeButton(left_bar_titles[2], "cards/rare.png", "cards/rare_hover.png", "cards/rare_active.png", 110, 150);
-            grare = makeButton(left_bar_titles[3], "cards/grare.png", "cards/grare_hover.png", "cards/grare_active.png", 110, 150);
-            epic = makeButton(left_bar_titles[4], "cards/epic.png", "cards/epic_hover.png", "cards/epic_active.png", 110, 150);
-            gepic = makeButton(left_bar_titles[5], "cards/gepic.png", "cards/gepic_hover.png", "cards/gepic_active.png", 110, 150);
-            legend = makeButton(left_bar_titles[6], "cards/legend.png", "cards/legend_hover.png", "cards/legend_active.png", 110, 150);
-            glegend = makeButton(left_bar_titles[7], "cards/glegend.png", "cards/glegend_hover.png", "cards/glegend_active.png", 110, 150);
-                
-        } catch (IOException ex) {
-            Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
         
-        JButton back = new JButton(jezyk.getText(Sback));
         addButton = new JButton(jezyk.getText(Sadd));
         addButton.setEnabled(false);
         
+        JButton back = new JButton(jezyk.getText(Sback));
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                try {
+                    SelectPackFrame.putButtons();
+                } catch (IOException ex) {
+                    Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 CardLayout cardLayout = (CardLayout) contentPane.getLayout();
                 cardLayout.show(contentPane, Sselectpackframe);
+                HearthStone.frame.setTitle(jezyk.getText(Stitle));
             }
         });
         
@@ -209,30 +190,23 @@ public class SelectCardsFrame extends JPanel implements Strings{
             public void actionPerformed(ActionEvent e) {
                 try {
                     saveData();
-                } catch (JSONException ex) {
-                    Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ParseException ex) {
+                    SelectPackFrame.putButtons();
+                } catch (JSONException | IOException | ParseException ex) {
                     Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                HearthStone.frame.setTitle(jezyk.getText(Stitle));
                 CardLayout cardLayout = (CardLayout) contentPane.getLayout();
                 cardLayout.show(contentPane, Smainframe);
             }
         });
         
-        background.add(common);
-        background.add(gcommon);
-        background.add(rare);
-        background.add(grare);
-        background.add(epic);
-        background.add(gepic);
-        background.add(legend);
-        background.add(glegend);
-        background.add(back);
-        background.add(addButton);
+        for (String title : left_bar_titles) {
+            background.add(makeButton(title, "cards/"+title+".png", "cards/"+title+"_hover.png", "cards/"+title+"_active.png", 110, 150));
+        }
         
-        setPreferredSize(new Dimension(700,400));
+        background.add(back);
+        background.add(addButton);     
+        
     }
     
 }

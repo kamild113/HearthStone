@@ -2,11 +2,8 @@ package hearthstone;
 
 import static hearthstone.Strings.Sdateformat;
 import static hearthstone.Strings.Sfilename;
-import static hearthstone.Strings.top_bar_titles;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -62,7 +59,7 @@ public class PackHistoryFrame extends JPanel implements Strings {
     }
     
     public PackHistoryFrame(String pack) throws ParseException {
-        Jezyk jezyk = new Polski();
+        Jezyk jezyk = HearthStone.jezyk;
         try {
             loadData(pack);
         } catch (JSONException ex) {
@@ -72,7 +69,7 @@ public class PackHistoryFrame extends JPanel implements Strings {
         }
         
         setLayout(new BorderLayout());
-	JLabel background=new JLabel(new ImageIcon(getClass().getResource("/background2.jpg")));
+	JLabel background=new JLabel(new ImageIcon(getClass().getResource("/dark_background.jpg")));
         background.setLayout(new GridLayout(3,1));
         add(background);
 
@@ -98,14 +95,5 @@ public class PackHistoryFrame extends JPanel implements Strings {
             background.add(panel);
         }
     
-        /*
-        JLabel LpacksFromLegend = new JLabel(jezyk.getText(Spacksfromlegend));
-        JLabel LdaysFromLegend = new JLabel(jezyk.getText(Sdaysfromlegend));
-        LpacksFromLegend.setForeground(Color.yellow);
-        LdaysFromLegend.setForeground(Color.yellow);
-        panel.add(LpacksFromLegend);
-        panel.add(LdaysFromLegend);*/
-//JLabel LpacksCount = new JLabel(""+packsCount);
-        
     }
 }

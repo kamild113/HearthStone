@@ -11,7 +11,6 @@ import java.awt.FontFormatException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.logging.Level;
@@ -31,9 +30,8 @@ public class MainFrame extends JPanel implements Strings {
     public MainFrame(JPanel panel) throws IOException, FontFormatException {
        
         contentPane = panel;
-        Jezyk jezyk = new Polski();
+        Jezyk jezyk = HearthStone.jezyk;
         
-        Font font = Font.createFont(Font.TRUETYPE_FONT, new File(Sfont));
         setLayout(new BorderLayout());
 
 	JLabel background=new JLabel(new ImageIcon(getClass().getResource("/background2.jpg")));
@@ -55,7 +53,7 @@ public class MainFrame extends JPanel implements Strings {
         newPack.setBorder(BorderFactory.createEmptyBorder());
         newPack.setContentAreaFilled(false);
         newPack.setFocusable(false);
-        newPack.setPreferredSize(new Dimension(200, 260));
+        newPack.setPreferredSize(new Dimension(220, 260));
         
         JButton viewPacks = new JButton(new ImageIcon(startButtonView));
         viewPacks.setRolloverIcon(new ImageIcon(startButtonHoverView));
@@ -63,9 +61,10 @@ public class MainFrame extends JPanel implements Strings {
         viewPacks.setBorder(BorderFactory.createEmptyBorder());
         viewPacks.setContentAreaFilled(false);
         viewPacks.setFocusable(false);
+        viewPacks.setPreferredSize(new Dimension(220, 260));
         
         JLabel newPackLabel = new JLabel(jezyk.getText(Sopen));
-        newPackLabel.setFont(font.deriveFont(35f));
+        newPackLabel.setFont(new Font("Serif", Font.BOLD, 30));
         newPackLabel.setForeground(Color.yellow);
         newPackLabel.setPreferredSize(new Dimension(220, 245));
         newPackLabel.setAlignmentY(BOTTOM_ALIGNMENT);
@@ -73,7 +72,7 @@ public class MainFrame extends JPanel implements Strings {
         newPack.add(newPackLabel);
         
         JLabel viewPacksLabel = new JLabel(jezyk.getText(Sview));
-        viewPacksLabel.setFont(font.deriveFont(35f));
+        viewPacksLabel.setFont(new Font("Serif", Font.BOLD, 30));
         viewPacksLabel.setForeground(Color.yellow);
         viewPacksLabel.setPreferredSize(new Dimension(220, 245));
         viewPacksLabel.setAlignmentY(BOTTOM_ALIGNMENT);
@@ -85,16 +84,8 @@ public class MainFrame extends JPanel implements Strings {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    /*
-                    JFrame frame = new JFrame ("MyPanel");
-                    frame.getContentPane().add (new MyFrame());
-                    frame.pack();
-                    frame.setVisible (true);
-                    */
-                    contentPane.add(new MyFrame(contentPane), Spreviewframe);
-                } catch (JSONException ex) {
-                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
+                    contentPane.add(new PreviewFrame(contentPane), Spreviewframe);
+                } catch (JSONException | IOException ex) {
                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 CardLayout cardLayout = (CardLayout) contentPane.getLayout();
@@ -106,14 +97,8 @@ public class MainFrame extends JPanel implements Strings {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    contentPane.add(new SelectPackFrame(contentPane), Sselectpackframe);
-                } catch (FontFormatException ex) {
-                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    SelectPackFrame.putButtons();
                 } catch (IOException ex) {
-                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (JSONException ex) {
-                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ParseException ex) {
                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 CardLayout cardLayout = (CardLayout) contentPane.getLayout();
@@ -123,7 +108,6 @@ public class MainFrame extends JPanel implements Strings {
         
         background.add(newPack);
         background.add(viewPacks);
-        setSize(700, 400);
         setVisible(true);
     }
 }

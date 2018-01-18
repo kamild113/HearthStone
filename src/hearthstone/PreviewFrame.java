@@ -1,21 +1,19 @@
 package hearthstone;
 
-import static hearthstone.HearthStone.frame;
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -28,24 +26,33 @@ import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 
 
-public class MyFrame extends JPanel implements Strings{
+public class PreviewFrame extends JPanel implements Strings{
     
     JLabel labels[][] = new JLabel[left_bar_titles.length][top_bar_titles.length];
     private Jezyk jezyk;
     private JPanel contentPane;  
     Singleton singleton = Singleton.getInstance();
-    
- 
-    
-    private void makeBars() throws JSONException, IOException {
+
+    private void makeBars(JLabel bg) throws JSONException, IOException {
         JLabel tab[];
         JPanel bar;
-        
         for(int j=0; j<left_bar_titles.length; j++) {
             tab = new JLabel[top_bar_titles.length];
             tab[0] = new JLabel(jezyk.getText(left_bar_titles[j]));
-            for(int i=1; i<top_bar_titles.length; i++)
+            tab[0].setForeground(colors[j]);
+            if(j%2 == 0)
+                tab[0].setFont(new Font("Serif", Font.BOLD, 16));
+            else
+                tab[0].setFont(new Font("Serif", Font.BOLD | Font.ITALIC, 16));
+               
+            for(int i=1; i<top_bar_titles.length; i++){
                 tab[i] = new JLabel();
+                tab[i].setForeground(colors[j]);
+                if(j%2 == 0)
+                    tab[i].setFont(new Font("Serif", Font.BOLD, 20));
+                else
+                    tab[i].setFont(new Font("Serif", Font.BOLD | Font.ITALIC, 20));
+            }
 
             bar = new JPanel();
             bar.setLayout(new GridLayout(0, top_bar_titles.length));
@@ -55,7 +62,8 @@ public class MyFrame extends JPanel implements Strings{
                 bar.add(tab[i]);
             }
             labels[j] = tab;
-            add(bar);
+            bar.setOpaque(false);
+            bg.add(bar);
         }
         loadData();
     }
@@ -75,45 +83,30 @@ public class MyFrame extends JPanel implements Strings{
         parseJson(jo);
     }
     
-    private void saveData() throws JSONException {
-        JSONObject jo = new JSONObject();
-        Map m;
-        for(int i=0; i<left_bar_titles.length; i++) {
-            m = new LinkedHashMap(top_bar_titles.length-1);
-            for(int j=1; j<top_bar_titles.length; j++){
-                m.put(top_bar_titles[j], labels[i][j].getText());
-            }   
-            jo.put(left_bar_titles[i], m);
-        }
-                
-        PrintWriter pw = null;
-        try {
-            pw = new PrintWriter(Sfilename);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-                
-        pw.write(jo.toString(4));
-
-         
-        pw.flush();
-        pw.close();        
-    }
     
-    
-    public MyFrame(JPanel panel) throws JSONException, IOException {
+    public PreviewFrame(JPanel panel) throws JSONException, IOException {
         contentPane = panel;
-        setLayout(new GridLayout(left_bar_titles.length+1,0));
+        jezyk = HearthStone.jezyk;
 
-        jezyk = new Polski();
+        setLayout(new BorderLayout());
+	JLabel background=new JLabel(new ImageIcon(getClass().getResource("/bg_tab.jpg")));
+	add(background);
+        background.setLayout(new GridLayout(left_bar_titles.length+1,0));
+
      
         JPanel top_bar = new JPanel();
+        top_bar.setOpaque(false);
         top_bar.setLayout(new GridLayout(0, top_bar_titles.length));
-        JButton przycisk = new JButton(jezyk.getText(Sback));
+        JButton przycisk = new JButton("<< "+jezyk.getText(Sback)+" <<");
+        przycisk.setBorderPainted(false);
+        przycisk.setFocusPainted(false);
+        przycisk.setContentAreaFilled(false);
+        przycisk.setForeground(Color.yellow);
         top_bar.add(przycisk);
         for(int i=1; i<top_bar_titles.length; i++){
             String title = top_bar_titles[i];
             JButton tmpButton = new JButton(jezyk.getText(title));
+            tmpButton.setForeground(Color.yellow);
             tmpButton.setBorderPainted(false);
             tmpButton.setFocusPainted(false);
             tmpButton.setContentAreaFilled(false);
@@ -139,19 +132,15 @@ public class MyFrame extends JPanel implements Strings{
                     frame.setSize(400,400);
                     
                 } catch (ParseException ex) {
-                    Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(PreviewFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
          });  
             top_bar.add(tmpButton);
-        }
-            
-            
+        }            
 
-        add(top_bar);
-
-        makeBars(); 
-         
+        background.add(top_bar);
+        makeBars(background);    
          
          przycisk.addActionListener(new ActionListener(){  
             @Override
@@ -161,8 +150,6 @@ public class MyFrame extends JPanel implements Strings{
             }
          });  
          
-        
-        setSize(700, 400);
         setVisible(true);
     }
 }

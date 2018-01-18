@@ -1,18 +1,17 @@
 package hearthstone;
 
 import static hearthstone.Strings.Sfilename;
-import static hearthstone.Strings.left_bar_titles;
-import static hearthstone.Strings.top_bar_titles;
 import java.awt.CardLayout;
 import java.awt.FontFormatException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,69 +19,80 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 
 public class HearthStone implements Strings {
+    public static Jezyk jezyk;
+    
     public static JFrame frame;
-    private JPanel contentPane;
     
     private MainFrame panel1;
-    private SelectPackFrame panel2;
+    private SelectTypeOfPack panel2;
+    private SelectCardsFrame panel3;
+    private SelectPackFrame panel4;
     static MouseAdapter ma;
-   
-    private static void makeFile() throws JSONException {
-        JSONObject jo = new JSONObject();
-        Map m;
-        
-        for(int i=1; i<top_bar_titles.length; i++) {
-            m = new LinkedHashMap(5);
-            for(int j=0; j<left_bar_titles.length; j++){
-                m.put(left_bar_titles[j], "0");
-            }   
-            jo.put(top_bar_titles[i], m);
-        }
-        for(int i=1; i<top_bar_titles.length; i++)
-            jo.put(top_bar_titles[i]+Ssuffix, new JSONArray());
-        
-                
-        PrintWriter pw = null;
-        try {
-            pw = new PrintWriter(Sfilename);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-                
-        pw.write(jo.toString(4));
-         
-        pw.flush();
-        pw.close();     
+    static boolean fileExist = true;
+    static private Map<String, Jezyk> m = new HashMap();
+    
+    
+    static String loadLanguage() throws IOException, JSONException {
+        String text = new String(Files.readAllBytes(Paths.get(Sfilename)), StandardCharsets.UTF_8);
+        JSONObject jo = new JSONObject(text);
+        return jo.getString(Slanguage);
     }
     
-    private void displayGUI() throws IOException, FontFormatException, JSONException, ParseException
+    public HearthStone() {}
+        
+    public HearthStone(Jezyk lng) {
+        jezyk = lng;
+    }
+    
+    public void displayGUI() throws IOException, FontFormatException, JSONException, ParseException
     { 
-        frame = new JFrame(Stitle);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame = new JFrame(jezyk.getText(Stitle));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);     
+        
         frame.setResizable(false);
         frame.addMouseListener(ma);
         frame.addMouseMotionListener(ma);
         JPanel contentPane = new JPanel();
         contentPane.setLayout(new CardLayout());
         panel1 = new MainFrame(contentPane);
-        //panel2 = new SelectPackFrame(contentPane);
+        panel2 = new SelectTypeOfPack(contentPane);
+        panel3 = new SelectCardsFrame(contentPane);
+        panel4 = new SelectPackFrame(contentPane);
         contentPane.add(panel1, Smainframe); 
-        //contentPane.add(panel2, Sselectpackframe);
+        contentPane.add(panel2, Sselecttypeofpack);
+        contentPane.add(panel3, Sselectcardsframe);
+        contentPane.add(panel4, Sselectpackframe);
         
         frame.setContentPane(contentPane);
         ImageIcon img = new ImageIcon(getClass().getResource("/pack.png"));
         frame.setIconImage(img.getImage());
         frame.pack();   
+        frame.setSize(700, 400);
         frame.setLocationByPlatform(true);
         frame.setVisible(true);
     }
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, JSONException {
+        for(int i=0; i<languages.length; i++)
+            m.put(languages[i].getClass().getSimpleName(), languages[i]);
+        
+        if(!(new File(Sfilename).isFile())) {
+            fileExist = false;
+        }
+        if(!fileExist){
+            new SelectLanguage();
+            
+        } else {
+            String lng = loadLanguage();
+            if(m.containsKey(lng))
+                jezyk = m.get(lng);
+            else
+                jezyk = new English();
+        }
         ma = new MouseAdapter() {
         int lastX, lastY;
         @Override
@@ -101,32 +111,16 @@ public class HearthStone implements Strings {
             lastY = y;
         }
     };
-   
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             
-           public void run()
-            {
-                if(!(new File(Sfilename).isFile())) {
-                    System.out.println("Make file...");
+           public void run() { 
+                if(fileExist)
                     try {
-                        makeFile();
-                    } catch (JSONException ex) {
+                        new HearthStone().displayGUI();
+                    } catch (IOException | FontFormatException | JSONException | ParseException ex) {
                         Logger.getLogger(HearthStone.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    System.out.println("File done.");
-                }
-                try {
-                    new HearthStone().displayGUI();
-                } catch (IOException ex) {
-                    Logger.getLogger(HearthStone.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (FontFormatException ex) {
-                    Logger.getLogger(HearthStone.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (JSONException ex) {
-                    Logger.getLogger(HearthStone.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ParseException ex) {
-                    Logger.getLogger(HearthStone.class.getName()).log(Level.SEVERE, null, ex);
-                }
             }
         });
     }

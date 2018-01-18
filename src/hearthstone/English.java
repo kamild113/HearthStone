@@ -1,15 +1,21 @@
 package hearthstone;
 
+import static hearthstone.Strings.Sadd;
+import static hearthstone.Strings.Sback;
+import static hearthstone.Strings.Sopen;
+import static hearthstone.Strings.Sview;
 import java.util.HashMap;
 import java.util.Map;
 
-public class English implements Jezyk {
+public class English implements Jezyk, Strings {
     private Map<String, String> mapa = new HashMap<>();
     
     public English() {
         // MENU //
-        mapa.put("open", "Open");
-        mapa.put("view", "Preview");
+        mapa.put(Sopen, "Open");
+        mapa.put(Sview, "Preview");
+        mapa.put(Sback, "Back");
+        mapa.put(Sadd, "Add");
         // MENU//
         
         // PAKIETY //
@@ -22,6 +28,24 @@ public class English implements Jezyk {
         mapa.put("legend", "Legend");
         mapa.put("glegend", "Gold legend");
         // PAKIETY //
+        
+        // PAKIETY //
+        mapa.put("classic", "Classic");
+        mapa.put("kobolds", "Kobolds");
+        mapa.put("knights", "Knights");
+        mapa.put("un'goro", "Un'goro");
+        mapa.put("gadgetzan", "Gadgetzan");
+        // PAKIETY //
+        
+        // INNE //
+        mapa.put("PacksCount", "Packs opened");
+        mapa.put("PacksFromLegend", "Packs from the last legend");
+        mapa.put("DaysFromLegend", "Days from the last legend");
+        mapa.put(S1_4, "1+4");
+        mapa.put(Sother, "Other");
+        mapa.put(Stitle, "Hearthstone - packs counter");
+        mapa.put(Spackhistory, "Pack history");
+        // INNE //
         
     }
     

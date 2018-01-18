@@ -3,7 +3,6 @@ package hearthstone;
 import static hearthstone.Strings.Sdateformat;
 import static hearthstone.Strings.Sfilename;
 import static hearthstone.Strings.Ssuffix;
-import static hearthstone.Strings.left_bar_titles;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -16,7 +15,6 @@ import java.awt.FontFormatException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -24,11 +22,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -41,14 +41,16 @@ import org.apache.sling.commons.json.JSONObject;
 
 public class SelectPackFrame extends JPanel implements Strings {
     
-    private JPanel contentPane;
-    private Font font;
-    private Jezyk jezyk;
-    private Map<Date, String> m = new TreeMap<Date, String>(Collections.reverseOrder());
+    static private JPanel contentPane;
+    private static Jezyk jezyk;
+    static private Map<Date, String> m = new TreeMap<Date, String>(Collections.reverseOrder());
+    private static Vector<JButton> buttons = new Vector<>();
+    private static JLabel background;
+    static JButton back;
     
-    private void loadData() throws JSONException, IOException, ParseException {
+    private static void loadData() throws JSONException, IOException, ParseException {
+        m.clear();
         SimpleDateFormat ft = new SimpleDateFormat (Sdateformat);
-        
         String text = new String(Files.readAllBytes(Paths.get(Sfilename)), StandardCharsets.UTF_8);
         JSONObject jo = new JSONObject(text);
         for(int i=1; i<top_bar_titles.length; i++) {
@@ -58,12 +60,48 @@ public class SelectPackFrame extends JPanel implements Strings {
                 Date data = ft.parse(obj.getString("date"));
                 m.put(data, top_bar_titles[i]);
             } else {
-                m.put(ft.parse("1970-01-0"+i+" 00:00:00"),top_bar_titles[i]);
+                m.put(ft.parse("1970-01-0"+i+" 00:00:00:00"), top_bar_titles[i]);
             }
         }
     }
     
-    public final JButton makeButton(String text, int h, int w) throws IOException {
+    private static int getButtonFromVector(String text) {
+        for(int i=1; i<top_bar_titles.length; i++) {
+            if(top_bar_titles[i].equals(text)) 
+                return i;
+        }
+        return 0;
+    }
+    
+    public static void putButtons() throws IOException {
+        try {
+            loadData();
+        } catch (JSONException | ParseException ex) {
+            Logger.getLogger(SelectPackFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for(Map.Entry<Date, String> entry : m.entrySet()) {
+            System.out.println(entry.getValue());
+        }
+        System.out.println("--------");
+        background.remove(back);
+        for(int i=0; i<buttons.size(); i++)
+            background.remove(buttons.get(i));
+        
+        for(Map.Entry<Date, String> entry : m.entrySet()) {
+            JLabel label = new JLabel(jezyk.getText(entry.getValue()));
+            label.setFont(new Font("Serif", Font.BOLD, 18));
+            label.setForeground(Color.yellow);
+            label.setPreferredSize(new Dimension(100, 135));
+            label.setAlignmentY(BOTTOM_ALIGNMENT);
+            label.setAlignmentX(CENTER_ALIGNMENT);
+            buttons.get(getButtonFromVector(entry.getValue())-1).add(label);
+            background.add(buttons.get(getButtonFromVector(entry.getValue())-1));
+        }
+                
+        background.add(back);
+    }
+    
+    public JButton makeButton(String text, int h, int w) throws IOException {
         URL u = getClass().getResource("/packs/"+text+"_pack.png");
         String button = "/packs/"+text+"_pack.png";
         String hoverButton = "/packs/"+text+"_pack_hover.png";
@@ -85,9 +123,9 @@ public class SelectPackFrame extends JPanel implements Strings {
         tmp_button.setFocusable(false);
         tmp_button.setPreferredSize(new Dimension(h, w));
         
-        
+
         JLabel label = new JLabel(jezyk.getText(text));
-        label.setFont(font.deriveFont(20f));
+        label.setFont(new Font("Serif", Font.BOLD, 18));
         label.setForeground(Color.yellow);
         label.setPreferredSize(new Dimension(h, w));
         label.setAlignmentY(BOTTOM_ALIGNMENT);
@@ -99,35 +137,29 @@ public class SelectPackFrame extends JPanel implements Strings {
                 Singleton singleton = Singleton.getInstance();
                 singleton.setPack(text);
                 
-                contentPane.add(new SelectCardsFrame(contentPane), Sselectcardsframe);
+                HearthStone.frame.setTitle(jezyk.getText(Stitle) +" - " + jezyk.getText(text));
                 CardLayout cardLayout = (CardLayout) contentPane.getLayout();
-                cardLayout.show(contentPane, Sselectcardsframe);             
+                cardLayout.show(contentPane, Sselecttypeofpack);             
             }
         });
+        background.add(tmp_button);
         return tmp_button;
     }
     
     public SelectPackFrame(JPanel panel) throws FontFormatException, IOException, JSONException, ParseException {
         contentPane = panel;
-        jezyk = new Polski();
-        font = Font.createFont(Font.TRUETYPE_FONT, new File(Sfont));
+        jezyk = HearthStone.jezyk;
         loadData();
         setLayout(new BorderLayout());
-	JLabel background=new JLabel(new ImageIcon(getClass().getResource("/background2.jpg")));
+	background=new JLabel(new ImageIcon(getClass().getResource("/background2.jpg")));
 	add(background);
 	
         background.setLayout(new FlowLayout(FlowLayout.CENTER,30,100));
+
+        for(int i=1; i<top_bar_titles.length; i++) 
+            buttons.add(makeButton(top_bar_titles[i], 100, 135));
         
-        for(Map.Entry<Date, String> entry : m.entrySet()) {
-            background.add(makeButton(entry.getValue(), 100, 135));
-        }
-        /*
-        for(int i=1; i<top_bar_titles.length; i++) {
-            background.add(makeButton(top_bar_titles[i], 100, 135));
-        }*/
-        
-        JButton back = new JButton(jezyk.getText(Sback));
-        
+        back = new JButton(jezyk.getText(Sback));
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -135,9 +167,6 @@ public class SelectPackFrame extends JPanel implements Strings {
                 cardLayout.first(contentPane);
             }
         });
-        
-        background.add(back);
-        
-        setPreferredSize(new Dimension(700,400));
+             
     }
 }

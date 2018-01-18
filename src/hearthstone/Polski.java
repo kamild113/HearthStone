@@ -37,6 +37,10 @@ public class Polski implements Jezyk, Strings {
         mapa.put("PacksCount", "Otworzone pakiety");
         mapa.put("PacksFromLegend", "Pakietów od ostatniej legendy");
         mapa.put("DaysFromLegend", "Dni od ostatniej legendy");
+        mapa.put(S1_4, "1+4");
+        mapa.put(Sother, "Inny");
+        mapa.put(Stitle, "HearthStone - licznik pakietów");
+        mapa.put(Spackhistory, "Hisoria pakietów");
         // INNE //
         
     }
