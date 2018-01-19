@@ -12,6 +12,7 @@ public class Polski implements Jezyk, Strings {
         mapa.put(Sview, "Podgląd");
         mapa.put(Sback, "Powrót");
         mapa.put(Sadd, "Dodaj");
+        mapa.put(Sadded, "Dodano");
         // MENU//
         
         // RZADKOŚĆ //
@@ -37,7 +38,7 @@ public class Polski implements Jezyk, Strings {
         mapa.put("PacksCount", "Otworzone pakiety");
         mapa.put("PacksFromLegend", "Pakietów od ostatniej legendy");
         mapa.put("DaysFromLegend", "Dni od ostatniej legendy");
-        mapa.put(S1_4, "1+4");
+        mapa.put(S1_4, "Rzadka + 4");
         mapa.put(Sother, "Inny");
         mapa.put(Stitle, "HearthStone - licznik pakietów");
         mapa.put(Spackhistory, "Hisoria pakietów");

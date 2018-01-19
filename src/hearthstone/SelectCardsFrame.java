@@ -45,7 +45,7 @@ public class SelectCardsFrame extends JPanel implements Strings{
     static private int cardsCount = 0;
     static private int commonsCount = 0;
     static MouseAdapter ma;
-    Map m = new LinkedHashMap(top_bar_titles.length);
+    static Map m = new LinkedHashMap(top_bar_titles.length);
     
     static Vector<JLabel> labels=new Vector<JLabel>();
     
@@ -84,11 +84,14 @@ public class SelectCardsFrame extends JPanel implements Strings{
     }
     
     public static void resetLabels() {
+        SimpleDateFormat ft = new SimpleDateFormat (Sdateformat);
         for(int i=0; i<labels.size(); i++) {
             labels.get(i).setText("0");
         }
         cardsCount = 0;
         commonsCount = 0;
+        m.clear();
+        m.put("date", ft.format(new Date()));
         addButton.setEnabled(false);
     }
     
@@ -154,11 +157,8 @@ public class SelectCardsFrame extends JPanel implements Strings{
         return tmp_button;
     }
     
-    public SelectCardsFrame(JPanel panel) throws IOException {
-        SimpleDateFormat ft = new SimpleDateFormat (Sdateformat);
-        
+    public SelectCardsFrame(JPanel panel) throws IOException {  
         contentPane = panel;
-        m.put("date", ft.format(new Date()));
         Jezyk jezyk = HearthStone.jezyk;
         
         setLayout(new BorderLayout());
@@ -179,6 +179,7 @@ public class SelectCardsFrame extends JPanel implements Strings{
                 } catch (IOException ex) {
                     Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                HearthStone.frame.setTitle(jezyk.getText(Stitle));
                 CardLayout cardLayout = (CardLayout) contentPane.getLayout();
                 cardLayout.show(contentPane, Sselectpackframe);
                 HearthStone.frame.setTitle(jezyk.getText(Stitle));
@@ -194,9 +195,8 @@ public class SelectCardsFrame extends JPanel implements Strings{
                 } catch (JSONException | IOException | ParseException ex) {
                     Logger.getLogger(SelectCardsFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                HearthStone.frame.setTitle(jezyk.getText(Stitle));
                 CardLayout cardLayout = (CardLayout) contentPane.getLayout();
-                cardLayout.show(contentPane, Smainframe);
+                cardLayout.show(contentPane, Sselecttypeofpack);
             }
         });
         

@@ -79,10 +79,6 @@ public class SelectPackFrame extends JPanel implements Strings {
         } catch (JSONException | ParseException ex) {
             Logger.getLogger(SelectPackFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        for(Map.Entry<Date, String> entry : m.entrySet()) {
-            System.out.println(entry.getValue());
-        }
-        System.out.println("--------");
         background.remove(back);
         for(int i=0; i<buttons.size(); i++)
             background.remove(buttons.get(i));

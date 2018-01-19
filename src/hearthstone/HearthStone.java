@@ -68,7 +68,7 @@ public class HearthStone implements Strings {
         contentPane.add(panel4, Sselectpackframe);
         
         frame.setContentPane(contentPane);
-        ImageIcon img = new ImageIcon(getClass().getResource("/pack.png"));
+        ImageIcon img = new ImageIcon(getClass().getResource("/packs.png"));
         frame.setIconImage(img.getImage());
         frame.pack();   
         frame.setSize(700, 400);

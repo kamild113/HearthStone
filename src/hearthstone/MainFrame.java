@@ -1,6 +1,5 @@
 package hearthstone;
 
-import static hearthstone.Strings.Spreviewframe;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -12,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -105,9 +103,9 @@ public class MainFrame extends JPanel implements Strings {
                 cardLayout.show(contentPane, Sselectpackframe);
             }
         });
-        
         background.add(newPack);
         background.add(viewPacks);
+        
         setVisible(true);
     }
 }

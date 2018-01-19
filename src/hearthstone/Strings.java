@@ -25,6 +25,7 @@ public interface Strings {
     String Sselectlanguage = "Select your language:";
     String Slanguage = "Language";
     String S1_4 = "1+4";
+    String Sadded = "added";
     String Sother = "other";
     Jezyk languages[] = {new Polski(), new English()};
     Color colors[] = {Color.WHITE, Color.WHITE, Color.BLUE, Color.BLUE, Color.MAGENTA, Color.MAGENTA,

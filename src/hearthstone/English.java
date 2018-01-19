@@ -16,6 +16,7 @@ public class English implements Jezyk, Strings {
         mapa.put(Sview, "Preview");
         mapa.put(Sback, "Back");
         mapa.put(Sadd, "Add");
+        mapa.put(Sadded, "Added");
         // MENU//
         
         // PAKIETY //
@@ -41,7 +42,7 @@ public class English implements Jezyk, Strings {
         mapa.put("PacksCount", "Packs opened");
         mapa.put("PacksFromLegend", "Packs from the last legend");
         mapa.put("DaysFromLegend", "Days from the last legend");
-        mapa.put(S1_4, "1+4");
+        mapa.put(S1_4, "Rare + 4");
         mapa.put(Sother, "Other");
         mapa.put(Stitle, "Hearthstone - packs counter");
         mapa.put(Spackhistory, "Pack history");
